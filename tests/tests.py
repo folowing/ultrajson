@@ -35,8 +35,8 @@ class UltraJSONTests(unittest.TestCase):
 
     def test_encodeStringConversion(self):
         input = "A string \\ / \b \f \n \r \t </script> &"
-        not_html_encoded = '"A string \\\\ \\/ \\b \\f \\n \\r \\t <\\/script> &"'
-        html_encoded = '"A string \\\\ \\/ \\b \\f \\n \\r \\t \\u003c\\/script\\u003e \\u0026"'
+        not_html_encoded = '"A string \\\\ / \\b \\f \\n \\r \\t </script> &"'
+        html_encoded = '"A string \\\\ / \\b \\f \\n \\r \\t \\u003c/script\\u003e \\u0026"'
         not_slashes_escaped = '"A string \\\\ / \\b \\f \\n \\r \\t </script> &"'
 
         def helper(expected_output, **encode_kwargs):
@@ -62,7 +62,7 @@ class UltraJSONTests(unittest.TestCase):
         helper(not_slashes_escaped, escape_forward_slashes=False)
 
     def testWriteEscapedString(self):
-        self.assertEqual('"\\u003cimg src=\'\\u0026amp;\'\\/\\u003e"', ujson.dumps("<img src='&amp;'/>", encode_html_chars=True))
+        self.assertEqual('"\\u003cimg src=\'\\u0026amp;\'/\\u003e"', ujson.dumps("<img src='&amp;'/>", encode_html_chars=True))
 
     def test_doubleLongIssue(self):
         sut = {'a': -4342969734183514}
@@ -173,7 +173,7 @@ class UltraJSONTests(unittest.TestCase):
         input = "A string \\ / \b \f \n \r \t"
         output = ujson.encode(input)
         self.assertEqual(input, json.loads(output))
-        self.assertEqual(output, '"A string \\\\ \\/ \\b \\f \\n \\r \\t"')
+        self.assertEqual(output, '"A string \\\\ / \\b \\f \\n \\r \\t"')
         self.assertEqual(input, ujson.decode(output))
 
     def test_decodeUnicodeConversion(self):
