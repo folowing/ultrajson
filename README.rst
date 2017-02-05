@@ -62,12 +62,12 @@ Controls how many decimals to encode for double or decimal values. Default is 9:
 
 escape_forward_slashes
 ----------------------
-Controls whether forward slashes (``/``) are escaped. Default is True::
+Controls whether forward slashes (``/``) are escaped. Default is False::
 
     >>> ujson.dumps("http://esn.me")
-    '"http:\/\/esn.me"'
-    >>> ujson.dumps("http://esn.me", escape_forward_slashes=False)
     '"http://esn.me"'
+    >>> ujson.dumps("http://esn.me", escape_forward_slashes=True)
+    '"http:\/\/esn.me"'
 
 indent
 ----------------------
