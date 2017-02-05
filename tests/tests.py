@@ -181,7 +181,7 @@ class UltraJSONTests(unittest.TestCase):
 
     def test_encodeUnicodeConversion1(self):
         input = "Räksmörgås اسامة بن محمد بن عوض بن لادن"
-        enc = ujson.encode(input)
+        enc = ujson.encode(input, ensure_ascii=True)
         dec = ujson.decode(enc)
         self.assertEqual(enc, json_unicode(input))
         self.assertEqual(dec, json.loads(enc))
@@ -195,14 +195,14 @@ class UltraJSONTests(unittest.TestCase):
 
     def test_encodeUnicodeConversion2(self):
         input = "\xe6\x97\xa5\xd1\x88"
-        enc = ujson.encode(input)
+        enc = ujson.encode(input, ensure_ascii=True)
         dec = ujson.decode(enc)
         self.assertEqual(enc, json_unicode(input))
         self.assertEqual(dec, json.loads(enc))
 
     def test_encodeUnicodeSurrogatePair(self):
         input = "\xf0\x90\x8d\x86"
-        enc = ujson.encode(input)
+        enc = ujson.encode(input, ensure_ascii=True)
         dec = ujson.decode(enc)
 
         self.assertEqual(enc, json_unicode(input))
@@ -210,7 +210,7 @@ class UltraJSONTests(unittest.TestCase):
 
     def test_encodeUnicode4BytesUTF8(self):
         input = "\xf0\x91\x80\xb0TRAILINGNORMAL"
-        enc = ujson.encode(input)
+        enc = ujson.encode(input, ensure_ascii=True)
         dec = ujson.decode(enc)
 
         self.assertEqual(enc, json_unicode(input))
@@ -218,7 +218,7 @@ class UltraJSONTests(unittest.TestCase):
 
     def test_encodeUnicode4BytesUTF8Highest(self):
         input = "\xf3\xbf\xbf\xbfTRAILINGNORMAL"
-        enc = ujson.encode(input)
+        enc = ujson.encode(input, ensure_ascii=True)
         dec = ujson.decode(enc)
 
         self.assertEqual(enc, json_unicode(input))
@@ -229,7 +229,7 @@ class UltraJSONTests(unittest.TestCase):
     # as \uXXXX\uXXXX in json.
     def testEncodeUnicodeBMP(self):
         s = '\U0001f42e\U0001f42e\U0001F42D\U0001F42D'  # 🐮🐮🐭🐭
-        encoded = ujson.dumps(s)
+        encoded = ujson.dumps(s, ensure_ascii=True)
         encoded_json = json.dumps(s)
 
         if len(s) == 4:
@@ -256,7 +256,7 @@ class UltraJSONTests(unittest.TestCase):
 
     def testEncodeSymbols(self):
         s = '\u273f\u2661\u273f'  # ✿♡✿
-        encoded = ujson.dumps(s)
+        encoded = ujson.dumps(s, ensure_ascii=True)
         encoded_json = json.dumps(s)
         self.assertEqual(len(encoded), len(s) * 6 + 2)  # 6 characters + quotes
         self.assertEqual(encoded, encoded_json)
@@ -509,7 +509,8 @@ class UltraJSONTests(unittest.TestCase):
 
     def test_encodeUnicode4BytesUTF8Fail(self):
         input = b"\xfd\xbf\xbf\xbf\xbf\xbf"
-        self.assertRaises(OverflowError, ujson.encode, input)
+        enc = lambda x: ujson.encode(x, ensure_ascii=True)
+        self.assertRaises(OverflowError, enc, input)
 
     def test_encodeNullCharacter(self):
         input = "31337 \x00 1337"

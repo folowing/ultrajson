@@ -1042,7 +1042,7 @@ PyObject* objToJSON(PyObject* self, PyObject *args, PyObject *kwargs)
     PyObject_Free,
     -1, //recursionMax
     10,  // default double precision setting
-    1, //forceAscii
+    0, //forceAscii
     0, //encodeHTMLChars
     1, //escapeForwardSlashes
     0, //sortKeys
@@ -1058,9 +1058,9 @@ PyObject* objToJSON(PyObject* self, PyObject *args, PyObject *kwargs)
     return NULL;
   }
 
-  if (oensureAscii != NULL && !PyObject_IsTrue(oensureAscii))
+  if (oensureAscii != NULL && PyObject_IsTrue(oensureAscii))
   {
-    encoder.forceASCII = 0;
+    encoder.forceASCII = 1;
   }
 
   if (oencodeHTMLChars != NULL && PyObject_IsTrue(oencodeHTMLChars))

@@ -40,11 +40,11 @@ Used to enable special encoding of "unsafe" HTML characters into safer Unicode s
 
 ensure_ascii
 -------------
-Limits output to ASCII and escapes all extended characters above 127. Default is true. If your end format supports UTF-8 setting this option to false is highly recommended to save space::
+Limits output to ASCII and escapes all extended characters above 127. Default is false. If your end format only supports ascii setting this option to true:
 
-    >>> ujson.dumps(u"\xe5\xe4\xf6")
+    >>> ujson.dumps(u"\xe5\xe4\xf6", ensure_ascii=True)
     '"\\u00e5\\u00e4\\u00f6"'
-    >>> ujson.dumps(u"\xe5\xe4\xf6", ensure_ascii=False)
+    >>> ujson.dumps(u"\xe5\xe4\xf6")
     '"\xc3\xa5\xc3\xa4\xc3\xb6"'
 
 double_precision
