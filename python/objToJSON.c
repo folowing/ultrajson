@@ -779,9 +779,9 @@ PyObject* objToJSON(PyObject* self, PyObject *args, PyObject *kwargs)
     PyObject_Realloc,
     PyObject_Free,
     -1, //recursionMax
-    1, //forceAscii
+    0, //forceAscii
     0, //encodeHTMLChars
-    1, //escapeForwardSlashes
+    0, //escapeForwardSlashes
     0, //sortKeys
     0, //indent
     1, //allowNan
@@ -797,9 +797,9 @@ PyObject* objToJSON(PyObject* self, PyObject *args, PyObject *kwargs)
     return NULL;
   }
 
-  if (oensureAscii != NULL && !PyObject_IsTrue(oensureAscii))
+  if (oensureAscii != NULL && PyObject_IsTrue(oensureAscii))
   {
-    encoder.forceASCII = 0;
+    encoder.forceASCII = 1;
   }
 
   if (oencodeHTMLChars != NULL && PyObject_IsTrue(oencodeHTMLChars))
@@ -807,9 +807,9 @@ PyObject* objToJSON(PyObject* self, PyObject *args, PyObject *kwargs)
     encoder.encodeHTMLChars = 1;
   }
 
-  if (oescapeForwardSlashes != NULL && !PyObject_IsTrue(oescapeForwardSlashes))
+  if (oescapeForwardSlashes != NULL && PyObject_IsTrue(oescapeForwardSlashes))
   {
-    encoder.escapeForwardSlashes = 0;
+    encoder.escapeForwardSlashes = 1;
   }
 
   if (osortKeys != NULL && PyObject_IsTrue(osortKeys))

@@ -23,9 +23,9 @@ def test_encode_decimal():
 
 def test_encode_string_conversion():
     test_input = "A string \\ / \b \f \n \r \t </script> &"
-    not_html_encoded = '"A string \\\\ \\/ \\b \\f \\n \\r \\t <\\/script> &"'
+    not_html_encoded = '"A string \\\\ / \\b \\f \\n \\r \\t </script> &"'
     html_encoded = (
-        '"A string \\\\ \\/ \\b \\f \\n \\r \\t \\u003c\\/script\\u003e \\u0026"'
+        '"A string \\\\ / \\b \\f \\n \\r \\t \\u003c/script\\u003e \\u0026"'
     )
     not_slashes_escaped = '"A string \\\\ / \\b \\f \\n \\r \\t </script> &"'
 
@@ -53,7 +53,7 @@ def test_encode_string_conversion():
 
 
 def test_write_escaped_string():
-    assert "\"\\u003cimg src='\\u0026amp;'\\/\\u003e\"" == ujson.dumps(
+    assert "\"\\u003cimg src='\\u0026amp;'/\\u003e\"" == ujson.dumps(
         "<img src='&amp;'/>", encode_html_chars=True
     )
 
@@ -126,7 +126,7 @@ def test_encode_string_conversion2():
     test_input = "A string \\ / \b \f \n \r \t"
     output = ujson.encode(test_input)
     assert test_input == json.loads(output)
-    assert output == '"A string \\\\ \\/ \\b \\f \\n \\r \\t"'
+    assert output == '"A string \\\\ / \\b \\f \\n \\r \\t"'
     assert test_input == ujson.decode(output)
 
 
@@ -143,7 +143,7 @@ def test_encode_control_escaping():
 # as \uXXXX\uXXXX in json.
 def test_encode_unicode_bmp():
     s = "\U0001f42e\U0001f42e\U0001F42D\U0001F42D"  # 🐮🐮🐭🐭
-    encoded = ujson.dumps(s)
+    encoded = ujson.dumps(s, ensure_ascii=True)
     encoded_json = json.dumps(s)
 
     if len(s) == 4:
@@ -168,7 +168,7 @@ def test_encode_unicode_bmp():
 
 def test_encode_symbols():
     s = "\u273f\u2661\u273f"  # ✿♡✿
-    encoded = ujson.dumps(s)
+    encoded = ujson.dumps(s, ensure_ascii=True)
     encoded_json = json.dumps(s)
     assert len(encoded) == len(s) * 6 + 2  # 6 characters + quotes
     assert encoded == encoded_json
@@ -289,7 +289,7 @@ def test_decode_dict():
 def test_encode_unicode_4_bytes_utf8_fail():
     test_input = b"\xfd\xbf\xbf\xbf\xbf\xbf"
     with pytest.raises(OverflowError):
-        ujson.encode(test_input, reject_bytes=False)
+        ujson.encode(test_input, reject_bytes=False, ensure_ascii=True)
 
 
 def test_encode_null_character():
@@ -725,7 +725,7 @@ def test_encode_unicode(test_input):
     enc = ujson.encode(test_input)
     dec = ujson.decode(enc)
 
-    assert enc == json.dumps(test_input)
+    assert enc == json.dumps(test_input, ensure_ascii=False)
     assert dec == json.loads(enc)
 
 
